@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+# v2.1.1
+import sys
+from JAK.Application import JWebApp
+from JAK import IPC
+from JAK.Utils import Instance
+from JAK.Widgets import Dialog
+
+def docs():
+    docs_url = "https://docs.google.com/document/u/0/"
+    user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0"
+    try:
+        if sys.argv[1] != "--dev":
+            start = sys.argv[1]
+        else:
+            start = docs_url
+    except IndexError:
+        start = docs_url
+
+    icon = "/usr/share/pixmaps/googledocs.png"
+
+    tab_only_allow = "accounts.google.com", "docs.google.com", "drive.google.com"
+
+    rules = {"WebBrowserTab": tab_only_allow}
+   
+    menus = {"title": "Office", "entries": [\
+         ["Docs", "https://docs.google.com/document/u/0/"],\
+         ["Sheets", "https://docs.google.com/spreadsheets/u/0/"],\
+         ["Slides", "https://docs.google.com/presentation/u/0/"],\
+         ["Forms", "https://docs.google.com/forms/u/0/"],\
+         ["Drive", "https://drive.google.com/u/0/"]]},\
+
+    webapp = JWebApp(
+                     window={
+                        "title": "Google Docs",
+                        "icon": icon,
+                        "menus": menus,
+                     },
+
+                     webview={
+                         "userAgent": user_agent,
+                        "webContents": start,
+                        "urlRules": rules,
+                        "cookiesPath": "google",
+                        "online": True
+                    })
+    return webapp
+
+docs().run()
+ 
